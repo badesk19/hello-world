@@ -1,0 +1,208 @@
+package classes;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+
+import java.util.Iterator;
+
+
+import pojos.BookPojo;
+import customexceptions.BookExistException;
+import customexceptions.BookNotFoundException;
+import interfaces.BookOperations;
+
+public class BookOperationsClass implements BookOperations{
+	ArrayList<BookPojo> arrayList=new ArrayList<BookPojo>();
+
+	@Override
+	public boolean addBook(BookPojo pojoObject) throws BookExistException {
+		// TODO Auto-generated method stub
+		System.out.println(arrayList);
+		Iterator<BookPojo> itr=arrayList.iterator(); 
+		int flag=0;
+		BookPojo st;
+		if(arrayList.isEmpty())
+		{
+			flag++;
+		}else
+		{
+		while(itr.hasNext()){  
+			  st=(BookPojo)itr.next();
+			  if(st.getBookId()==pojoObject.getBookId())
+			  { 
+				  throw new BookExistException();
+			  }else
+			  {
+					flag++;
+			  }
+		}
+		}
+	if(flag>0)
+		{
+			arrayList.add(pojoObject);
+			return true;
+			
+		}
+		else
+		{
+			throw new BookExistException();
+			
+		}
+	}
+
+	
+	@Override
+	public boolean updateBook(BookPojo pojoObject) throws BookNotFoundException {
+		// TODO Auto-generated method stub
+		
+		int flag=0;
+		for(int i=0;i<arrayList.size();i++)
+		{
+			if(pojoObject.getBookId()==arrayList.get(i).getBookId())
+			{
+				arrayList.remove(i);
+				arrayList.add(pojoObject);
+				 flag++;
+				
+			}else
+			{
+				flag=0;
+			}
+			
+		}
+		if(flag>0)
+		{
+				return true;
+		}
+		else
+		{
+			throw new BookNotFoundException();
+			
+		}
+	}
+
+	@Override
+	public boolean deleteBook(String inputQuery) throws BookNotFoundException {
+		// TODO Auto-generated method stub
+		int flag=0;
+		for(int i=0;i<arrayList.size();i++)
+		{
+			if(inputQuery.equals(arrayList.get(i).getBookId()))
+			{
+				arrayList.remove(i);
+				 flag++;
+				
+			}else if(inputQuery.equals(arrayList.get(i).getBookName()))
+			{
+				
+				arrayList.remove(i);
+				flag++;
+			}
+		}
+		if(flag>0)
+		{
+		
+			return true;
+			
+		}
+		else
+		{
+			throw new BookNotFoundException();
+			
+		}
+		
+		 
+		
+	}
+
+	@Override
+	public void viewBook(String inputQuery) throws BookNotFoundException {
+		// TODO Auto-generated method stub
+		
+
+		int flag=0;
+		
+		for(int i=0;i<arrayList.size();i++)
+		{
+		if(arrayList.get(i).getAuthor().equals(inputQuery))
+		{
+			System.out.println(arrayList.get(i));
+			flag++;
+			
+		}else if(arrayList.get(i).getBookName().equals(inputQuery))
+		{
+		
+			System.out.println(arrayList.get(i));
+			flag++;
+			
+		}else if(arrayList.get(i).getPublisher().equals(inputQuery))
+		{
+			System.out.println(arrayList.get(i));
+			flag++;
+		}
+		}
+		
+		if(flag>0)
+		{
+	
+		}
+		else
+		{
+			throw new BookNotFoundException();
+			
+		}
+		
+
+	}
+
+	@Override
+	public void viewAllBook() throws BookNotFoundException {
+		// TODO Auto-generated method stub
+		if(arrayList.isEmpty())
+		{
+			throw new BookNotFoundException();
+		}else
+		{
+		System.out.println(arrayList);
+		}
+	}
+
+
+	@Override
+	public void sortByBookName() throws BookNotFoundException {
+		// TODO Auto-generated method stub
+		
+		if(arrayList.isEmpty())
+		{
+			throw new BookNotFoundException();
+			
+		}
+		else
+		{
+			
+		Collections.sort(arrayList,BookPojo.bookComparatorByName);
+		
+		}
+		
+	}
+
+
+	@Override
+	public void sortByBookId() throws BookNotFoundException {
+		if(arrayList.isEmpty())
+		{
+			throw new BookNotFoundException();
+			
+		}
+		else
+		{
+			
+		Collections.sort(arrayList,BookPojo.bookComparatorByBookId);
+		
+		}
+	}
+
+	
+	
+}
